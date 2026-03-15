@@ -1,0 +1,16 @@
+72322a848ab928aa5c89f0cb78209805
+::res://::1773562472
+export_presets.cfg::TextFile::-1::1773562263::0::1::::<><><>0<>0<><>::
+extension_api.json::JSON::-1::1773562263::0::1::::<><><>0<>0<><>::
+icon2.png::CompressedTexture2D::405303877764444806::1773562263::1773562473::1::::<><><>0<>0<>7fca02221a843b7cdd853114c6f4d442<>res://godot/imported/icon2.png-2294dfe885793d4711fc20bee13a3760.ctex::
+icon.icns::OtherFile::-1::1773562263::0::1::::<><><>0<>0<><>::
+icon.ico::OtherFile::-1::1773562263::0::1::::<><><>0<>0<><>::
+icon.png::CompressedTexture2D::8022539271212349853::1773562263::1773562473::1::::<><><>0<>0<>e52ba1790c007a38c87552c0e42f514b<>res://godot/imported/icon.png-487276ed1e3a0c39cad0279d744ee560.ctex::
+icon.svg::CompressedTexture2D::3048724436703944391::1773562263::1773562473::1::::<><><>0<>0<>195e8a562aa0558975c144dcab0fa0b6<>res://godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+KodeMono-VariableFont_wght.ttf::FontFile::3740959822521750263::1773562263::1773562473::1::::<><><>0<>0<>dd293a7df7c965cc5fecc3f0c8fabc5f<>res://godot/imported/KodeMono-VariableFont_wght.ttf-406029ead69daeb688d53263afe11aa9.fontdata::
+main.gd::GDScript::3618929941455291753::1773562263::0::1::::<>Control<><>0<>0<><>::
+main.theme::Theme::8150520340814609946::1773562263::0::1::::<><><>0<>0<><>::uid://btkfcdlxenu0n::::res://KodeMono-VariableFont_wght.ttf
+main.tscn::PackedScene::1159287688064561535::1773562263::0::1::::<><><>0<>0<><>::uid://brtbin87glo62::::res://main.gd<>uid://gvstbrqpv3nq::::res://nfm.gd<>uid://d3hc7vyx2fls5::::res://splash.png
+nfm.gd::GDScript::465611910150334226::1773562263::0::1::::<>GraphNode<><>0<>0<><>::
+README.md::TextFile::-1::1773562263::0::1::::<><><>0<>0<><>::
+splash.png::CompressedTexture2D::9139180037760082662::1773562263::1773562474::1::::<><><>0<>0<>ba4019caed3fd1040b894a6f64fb50eb<>res://godot/imported/splash.png-929ed8a00b89ba36c51789452f874c77.ctex::

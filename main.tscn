@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://qrtkfp63rm0v"]
 
 [ext_resource type="Script" uid="uid://brtbin87glo62" path="res://scripts/main.gd" id="1_h2yge"]
-[ext_resource type="Texture2D" path="res://textures/splash/splash.png" id="2_0xm2m"]
 [ext_resource type="Texture2D" uid="uid://bv6iac43em1jy" path="res://textures/esdr/splash/splash.png" id="3_h2yge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0xm2m"]
@@ -12,16 +11,6 @@ content_margin_bottom = 6.0
 bg_color = Color(0.11489678, 0.11489683, 0.11489671, 1)
 border_width_bottom = 2
 border_color = Color(0.22670749, 0.22670752, 0.22670743, 1)
-
-[sub_resource type="LabelSettings" id="LabelSettings_ig7tw"]
-font_color = Color(1, 0.22000003, 0.22000003, 1)
-
-[sub_resource type="GDScript" id="GDScript_1bvp3"]
-script/source = "extends GraphNode
-
-func _ready() -> void:
-	pass
-"
 
 [sub_resource type="Animation" id="Animation_h2yge"]
 length = 0.001
@@ -225,7 +214,7 @@ grow_horizontal = 2
 grow_vertical = 2
 rotation = -0.34906584
 pivot_offset = Vector2(250, 250)
-texture = ExtResource("2_0xm2m")
+texture = ExtResource("3_h2yge")
 expand_mode = 1
 stretch_mode = 5
 
@@ -280,261 +269,11 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 grid_pattern = 1
+zoom = 0.75
+zoom_min = 0.25
+zoom_max = 2.25
+zoom_step = 1.5
 show_zoom_label = true
-
-[node name="GraphElement" type="GraphNode" parent="VBoxContainer/Control/GraphEdit" unique_id=284158145]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -376.0
-offset_top = -214.5
-offset_right = -76.0
-offset_bottom = 248.5
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-theme_override_constants/separation = 6
-position_offset = Vector2(200, 92)
-resizable = true
-title = "RTL-SDR Source"
-slot/0/left_enabled = true
-slot/0/left_type = 1
-slot/0/left_color = Color(1, 0.93333334, 0, 1)
-slot/0/left_icon = null
-slot/0/right_enabled = true
-slot/0/right_type = 1
-slot/0/right_color = Color(1, 0.93333334, 0, 1)
-slot/0/right_icon = null
-slot/0/draw_stylebox = true
-slot/1/left_enabled = false
-slot/1/left_type = 0
-slot/1/left_color = Color(1, 1, 1, 1)
-slot/1/left_icon = null
-slot/1/right_enabled = false
-slot/1/right_type = 0
-slot/1/right_color = Color(0, 0.46666667, 1, 1)
-slot/1/right_icon = null
-slot/1/draw_stylebox = true
-slot/2/left_enabled = false
-slot/2/left_type = 0
-slot/2/left_color = Color(1, 1, 1, 1)
-slot/2/left_icon = null
-slot/2/right_enabled = true
-slot/2/right_type = 8
-slot/2/right_color = Color(0, 0.46666667, 1, 1)
-slot/2/right_icon = null
-slot/2/draw_stylebox = true
-slot/3/left_enabled = true
-slot/3/left_type = 2
-slot/3/left_color = Color(1, 1, 1, 1)
-slot/3/left_icon = null
-slot/3/right_enabled = true
-slot/3/right_type = 2
-slot/3/right_color = Color(1, 1, 1, 1)
-slot/3/right_icon = null
-slot/3/draw_stylebox = true
-slot/4/left_enabled = true
-slot/4/left_type = 2
-slot/4/left_color = Color(1, 1, 1, 1)
-slot/4/left_icon = null
-slot/4/right_enabled = true
-slot/4/right_type = 2
-slot/4/right_color = Color(1, 1, 1, 1)
-slot/4/right_icon = null
-slot/4/draw_stylebox = true
-slot/5/left_enabled = true
-slot/5/left_type = 2
-slot/5/left_color = Color(1, 1, 1, 1)
-slot/5/left_icon = null
-slot/5/right_enabled = true
-slot/5/right_type = 2
-slot/5/right_color = Color(1, 1, 1, 1)
-slot/5/right_icon = null
-slot/5/draw_stylebox = true
-slot/6/left_enabled = true
-slot/6/left_type = 2
-slot/6/left_color = Color(1, 1, 1, 1)
-slot/6/left_icon = null
-slot/6/right_enabled = true
-slot/6/right_type = 2
-slot/6/right_color = Color(1, 1, 1, 1)
-slot/6/right_icon = null
-slot/6/draw_stylebox = true
-slot/7/left_enabled = true
-slot/7/left_type = 1
-slot/7/left_color = Color(1, 0.93333334, 0, 1)
-slot/7/left_icon = null
-slot/7/right_enabled = true
-slot/7/right_type = 1
-slot/7/right_color = Color(1, 0.93333334, 0, 1)
-slot/7/right_icon = null
-slot/7/draw_stylebox = true
-slot/8/left_enabled = true
-slot/8/left_type = 2
-slot/8/left_color = Color(1, 1, 1, 1)
-slot/8/left_icon = null
-slot/8/right_enabled = true
-slot/8/right_type = 0
-slot/8/right_color = Color(1, 1, 1, 1)
-slot/8/right_icon = null
-slot/8/draw_stylebox = true
-
-[node name="SpinBox2" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=2029565516]
-layout_mode = 2
-max_value = 1500000000.0
-value = 433000000.0
-prefix = "Freqency:"
-suffix = "Hz"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=1405518690]
-layout_mode = 2
-
-[node name="Button" type="Button" parent="VBoxContainer/Control/GraphEdit/GraphElement/HBoxContainer" unique_id=395855471]
-layout_mode = 2
-size_flags_horizontal = 0
-toggle_mode = true
-text = "START"
-
-[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement/HBoxContainer" unique_id=92902209]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "Status: OFF"
-label_settings = SubResource("LabelSettings_ig7tw")
-
-[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=2137089612]
-layout_mode = 2
-text = "Baseband"
-horizontal_alignment = 2
-
-[node name="CheckBox" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=1113911385]
-layout_mode = 2
-text = "Bias T"
-
-[node name="CheckBox2" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=1619050309]
-layout_mode = 2
-text = "RTL AGC"
-
-[node name="CheckBox3" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=1041508710]
-layout_mode = 2
-text = "TUNER AGC"
-
-[node name="CheckBox4" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=137830346]
-layout_mode = 2
-text = "IQ Correction"
-
-[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=1327678881]
-layout_mode = 2
-size_flags_vertical = 10
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer2" unique_id=1813562315]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer2/VBoxContainer" unique_id=1056303761]
-layout_mode = 2
-text = "Sample Rate"
-
-[node name="SpinBox" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer2/VBoxContainer" unique_id=868395572]
-layout_mode = 2
-min_value = 256000.0
-max_value = 3200000.0
-value = 2400000.0
-alignment = 3
-suffix = "Samples/Second"
-
-[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement" unique_id=1654663274]
-layout_mode = 2
-
-[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer" unique_id=16127686]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer/VBoxContainer" unique_id=516928490]
-layout_mode = 2
-text = "Gain"
-
-[node name="HSlider2" type="HSlider" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer/VBoxContainer" unique_id=296027622]
-layout_mode = 2
-value = 50.0
-
-[node name="GraphElement2" type="GraphNode" parent="VBoxContainer/Control/GraphEdit" unique_id=451026522]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 224.0
-offset_top = -106.5
-offset_right = 524.0
-offset_bottom = 193.5
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-position_offset = Vector2(800, 200)
-resizable = true
-title = "NFM Demodulator"
-slot/0/left_enabled = true
-slot/0/left_type = 1
-slot/0/left_color = Color(1, 0.93333334, 0, 1)
-slot/0/left_icon = null
-slot/0/right_enabled = false
-slot/0/right_type = 0
-slot/0/right_color = Color(1, 1, 1, 1)
-slot/0/right_icon = null
-slot/0/draw_stylebox = false
-slot/1/left_enabled = true
-slot/1/left_type = 1
-slot/1/left_color = Color(1, 0.93333334, 0, 1)
-slot/1/left_icon = null
-slot/1/right_enabled = false
-slot/1/right_type = 0
-slot/1/right_color = Color(1, 1, 1, 1)
-slot/1/right_icon = null
-slot/1/draw_stylebox = true
-slot/2/left_enabled = true
-slot/2/left_type = 8
-slot/2/left_color = Color(0, 0.46666667, 1, 1)
-slot/2/left_icon = null
-slot/2/right_enabled = false
-slot/2/right_type = 0
-slot/2/right_color = Color(1, 1, 1, 1)
-slot/2/right_icon = null
-slot/2/draw_stylebox = true
-slot/3/left_enabled = false
-slot/3/left_type = 0
-slot/3/left_color = Color(1, 1, 1, 1)
-slot/3/left_icon = null
-slot/3/right_enabled = true
-slot/3/right_type = 9
-slot/3/right_color = Color(0.36078432, 1, 0.43529412, 1)
-slot/3/right_icon = null
-slot/3/draw_stylebox = true
-script = SubResource("GDScript_1bvp3")
-
-[node name="SpinBox" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement2" unique_id=2073568302]
-layout_mode = 2
-max_value = 1200000.0
-prefix = "Offset:"
-suffix = "Hz"
-
-[node name="SpinBox2" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement2" unique_id=64361006]
-layout_mode = 2
-min_value = 1.0
-max_value = 1200000.0
-value = 8000.0
-prefix = "Bandwidth:"
-suffix = "Hz"
-
-[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement2" unique_id=943948296]
-layout_mode = 2
-text = "Baseband"
-
-[node name="Label2" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement2" unique_id=447215310]
-layout_mode = 2
-text = "Audio"
-horizontal_alignment = 2
 
 [node name="Button" type="Button" parent="VBoxContainer/Control" unique_id=1022847905]
 layout_mode = 1

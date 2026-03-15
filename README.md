@@ -1,4 +1,4 @@
-# ESDR
+# Everything Software Defined Radio
 
 ![ESDR banner](textures/esdr/splash/splash.png)
 

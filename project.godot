@@ -24,10 +24,10 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 run/max_fps=60
 run/low_processor_mode=true
 boot_splash/bg_color=Color(0, 0, 0, 1)
-boot_splash/image="uid://d3hc7vyx2fls5"
-config/icon="uid://f1lkb1jja70e"
-config/macos_native_icon="res://icon.icns"
-config/windows_native_icon="res://icon.ico"
+boot_splash/image="uid://bv6iac43em1jy"
+config/icon="uid://dve2nlokaajux"
+config/macos_native_icon="res://textures/esdr/icons/icon.icns"
+config/windows_native_icon="res://textures/esdr/icons/icon.ico"
 
 [display]
 

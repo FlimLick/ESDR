@@ -1,0 +1,574 @@
+[gd_scene load_steps=9 format=3 uid="uid://qrtkfp63rm0v"]
+
+[ext_resource type="Script" uid="uid://brtbin87glo62" path="res://main.gd" id="1_h2yge"]
+[ext_resource type="Script" uid="uid://gvstbrqpv3nq" path="res://nfm.gd" id="1_ig7tw"]
+[ext_resource type="Texture2D" uid="uid://d3hc7vyx2fls5" path="res://splash.png" id="2_0xm2m"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0xm2m"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 6.0
+bg_color = Color(0.11489678, 0.11489683, 0.11489671, 1)
+border_width_bottom = 2
+border_color = Color(0.22670749, 0.22670752, 0.22670743, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ig7tw"]
+font_color = Color(1, 0.22000003, 0.22000003, 1)
+
+[sub_resource type="Animation" id="Animation_h2yge"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("splash:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("splash:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("splash/TextureRect:scale")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("splash/TextureRect:anchor_left")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("splash/TextureRect:anchor_top")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("splash/TextureRect:anchor_right")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("splash/TextureRect:anchor_bottom")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [1.0]
+}
+
+[sub_resource type="Animation" id="Animation_0xm2m"]
+resource_name = "splash"
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("splash:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 0.29730174, 1),
+"update": 1,
+"values": [true, true, false]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("splash:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 0.29730174, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("splash/TextureRect:anchor_left")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("splash/TextureRect:anchor_top")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [0.0, 0.0, 0.5]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("splash/TextureRect:anchor_right")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [1.0, 1.0, 0.5]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("splash/TextureRect:anchor_bottom")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 2, 1),
+"update": 0,
+"values": [1.0, 1.0, 0.5]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_1bvp3"]
+_data = {
+&"RESET": SubResource("Animation_h2yge"),
+&"splash": SubResource("Animation_0xm2m")
+}
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_h2yge")
+
+[node name="Control2" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="TextureRect" type="TextureRect" parent="Control2"]
+modulate = Color(1, 1, 1, 0.2784314)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -250.0
+offset_right = 250.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+rotation = -0.34906584
+pivot_offset = Vector2(250, 250)
+texture = ExtResource("2_0xm2m")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_0xm2m")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "File"
+
+[node name="Button2" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Options"
+
+[node name="Button3" type="Button" parent="VBoxContainer/PanelContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "Help"
+
+[node name="Control" type="Control" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GraphEdit" type="GraphEdit" parent="VBoxContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+grid_pattern = 1
+show_zoom_label = true
+
+[node name="GraphElement" type="GraphNode" parent="VBoxContainer/Control/GraphEdit"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -376.0
+offset_top = -211.0
+offset_right = -76.0
+offset_bottom = 252.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+theme_override_constants/separation = 6
+position_offset = Vector2(200, 92)
+resizable = true
+title = "RTL-SDR Source"
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color(1, 0.93333334, 0, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = true
+slot/0/right_type = 1
+slot/0/right_color = Color(1, 0.93333334, 0, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = true
+slot/1/left_enabled = false
+slot/1/left_type = 0
+slot/1/left_color = Color(1, 1, 1, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color(0, 0.46666667, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+slot/2/left_enabled = false
+slot/2/left_type = 0
+slot/2/left_color = Color(1, 1, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = true
+slot/2/right_type = 8
+slot/2/right_color = Color(0, 0.46666667, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
+slot/3/left_enabled = true
+slot/3/left_type = 2
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = true
+slot/3/right_type = 2
+slot/3/right_color = Color(1, 1, 1, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
+slot/4/left_enabled = true
+slot/4/left_type = 2
+slot/4/left_color = Color(1, 1, 1, 1)
+slot/4/left_icon = null
+slot/4/right_enabled = true
+slot/4/right_type = 2
+slot/4/right_color = Color(1, 1, 1, 1)
+slot/4/right_icon = null
+slot/4/draw_stylebox = true
+slot/5/left_enabled = true
+slot/5/left_type = 2
+slot/5/left_color = Color(1, 1, 1, 1)
+slot/5/left_icon = null
+slot/5/right_enabled = true
+slot/5/right_type = 2
+slot/5/right_color = Color(1, 1, 1, 1)
+slot/5/right_icon = null
+slot/5/draw_stylebox = true
+slot/6/left_enabled = true
+slot/6/left_type = 2
+slot/6/left_color = Color(1, 1, 1, 1)
+slot/6/left_icon = null
+slot/6/right_enabled = true
+slot/6/right_type = 2
+slot/6/right_color = Color(1, 1, 1, 1)
+slot/6/right_icon = null
+slot/6/draw_stylebox = true
+slot/7/left_enabled = true
+slot/7/left_type = 1
+slot/7/left_color = Color(1, 0.93333334, 0, 1)
+slot/7/left_icon = null
+slot/7/right_enabled = true
+slot/7/right_type = 1
+slot/7/right_color = Color(1, 0.93333334, 0, 1)
+slot/7/right_icon = null
+slot/7/draw_stylebox = true
+slot/8/left_enabled = true
+slot/8/left_type = 2
+slot/8/left_color = Color(1, 1, 1, 1)
+slot/8/left_icon = null
+slot/8/right_enabled = true
+slot/8/right_type = 0
+slot/8/right_color = Color(1, 1, 1, 1)
+slot/8/right_icon = null
+slot/8/draw_stylebox = true
+
+[node name="SpinBox2" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+max_value = 1500000000.0
+value = 433000000.0
+prefix = "Freqency:"
+suffix = "Hz"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/Control/GraphEdit/GraphElement/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+toggle_mode = true
+text = "START"
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Status: OFF"
+label_settings = SubResource("LabelSettings_ig7tw")
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+text = "Baseband"
+horizontal_alignment = 2
+
+[node name="CheckBox" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+text = "Bias T"
+
+[node name="CheckBox2" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+text = "RTL AGC"
+
+[node name="CheckBox3" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+text = "TUNER AGC"
+
+[node name="CheckBox4" type="CheckBox" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+text = "IQ Correction"
+
+[node name="PanelContainer2" type="PanelContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+size_flags_vertical = 10
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer2"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+text = "Sample Rate"
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer2/VBoxContainer"]
+layout_mode = 2
+min_value = 256000.0
+max_value = 3200000.0
+value = 2400000.0
+alignment = 3
+suffix = "Samples/Second"
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Gain"
+
+[node name="HSlider2" type="HSlider" parent="VBoxContainer/Control/GraphEdit/GraphElement/PanelContainer/VBoxContainer"]
+layout_mode = 2
+value = 50.0
+
+[node name="GraphElement2" type="GraphNode" parent="VBoxContainer/Control/GraphEdit"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 224.0
+offset_top = -103.0
+offset_right = 524.0
+offset_bottom = 197.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+position_offset = Vector2(800, 200)
+resizable = true
+title = "NFM Demodulator"
+slot/0/left_enabled = true
+slot/0/left_type = 1
+slot/0/left_color = Color(1, 0.93333334, 0, 1)
+slot/0/left_icon = null
+slot/0/right_enabled = false
+slot/0/right_type = 0
+slot/0/right_color = Color(1, 1, 1, 1)
+slot/0/right_icon = null
+slot/0/draw_stylebox = false
+slot/1/left_enabled = true
+slot/1/left_type = 1
+slot/1/left_color = Color(1, 0.93333334, 0, 1)
+slot/1/left_icon = null
+slot/1/right_enabled = false
+slot/1/right_type = 0
+slot/1/right_color = Color(1, 1, 1, 1)
+slot/1/right_icon = null
+slot/1/draw_stylebox = true
+slot/2/left_enabled = true
+slot/2/left_type = 8
+slot/2/left_color = Color(0, 0.46666667, 1, 1)
+slot/2/left_icon = null
+slot/2/right_enabled = false
+slot/2/right_type = 0
+slot/2/right_color = Color(1, 1, 1, 1)
+slot/2/right_icon = null
+slot/2/draw_stylebox = true
+slot/3/left_enabled = false
+slot/3/left_type = 0
+slot/3/left_color = Color(1, 1, 1, 1)
+slot/3/left_icon = null
+slot/3/right_enabled = true
+slot/3/right_type = 9
+slot/3/right_color = Color(0.36078432, 1, 0.43529412, 1)
+slot/3/right_icon = null
+slot/3/draw_stylebox = true
+script = ExtResource("1_ig7tw")
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement2"]
+layout_mode = 2
+max_value = 1200000.0
+prefix = "Offset:"
+suffix = "Hz"
+
+[node name="SpinBox2" type="SpinBox" parent="VBoxContainer/Control/GraphEdit/GraphElement2"]
+layout_mode = 2
+min_value = 1.0
+max_value = 1200000.0
+value = 8000.0
+prefix = "Bandwidth:"
+suffix = "Hz"
+
+[node name="Label" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement2"]
+layout_mode = 2
+text = "Baseband"
+
+[node name="Label2" type="Label" parent="VBoxContainer/Control/GraphEdit/GraphElement2"]
+layout_mode = 2
+text = "Audio"
+horizontal_alignment = 2
+
+[node name="Button" type="Button" parent="VBoxContainer/Control"]
+layout_mode = 1
+offset_left = 10.0
+offset_top = 66.0
+offset_right = 103.0
+offset_bottom = 103.0
+text = "Add Node"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_1bvp3")
+}
+autoplay = "splash"
+
+[node name="splash" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="ColorRect" type="ColorRect" parent="splash"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+color = Color(0, 0, 0, 1)
+
+[node name="TextureRect" type="TextureRect" parent="splash"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_0xm2m")
+expand_mode = 1
+stretch_mode = 5

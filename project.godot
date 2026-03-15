@@ -1,0 +1,48 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Everything SDR"
+run/main_scene="res://main.tscn"
+run/print_header=false
+config/use_hidden_project_data_directory=false
+config/use_custom_user_dir=true
+config/custom_user_dir_name="ESDR"
+config/features=PackedStringArray("4.5", "Forward Plus")
+run/max_fps=60
+run/low_processor_mode=true
+boot_splash/bg_color=Color(0, 0, 0, 1)
+boot_splash/image="uid://d3hc7vyx2fls5"
+config/icon="uid://f1lkb1jja70e"
+config/macos_native_icon="res://icon.icns"
+config/windows_native_icon="res://icon.ico"
+
+[display]
+
+window/size/extend_to_title=true
+window/size/sharp_corners=true
+window/vsync/vsync_mode=0
+
+[gui]
+
+theme/custom="uid://doef45mmmddfm"
+
+[input_devices]
+
+pointing/android/enable_pan_and_scale_gestures=true
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/vram_compression/import_etc2_astc=true
+anti_aliasing/quality/msaa_2d=2
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)

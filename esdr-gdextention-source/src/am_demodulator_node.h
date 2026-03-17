@@ -1,5 +1,5 @@
-#ifndef ESDR_NFM_DEMODULATOR_NODE_H
-#define ESDR_NFM_DEMODULATOR_NODE_H
+#ifndef ESDR_AM_DEMODULATOR_NODE_H
+#define ESDR_AM_DEMODULATOR_NODE_H
 
 #include "demod_dsp_utils.h"
 #include "digit_number_selector.h"
@@ -11,12 +11,12 @@
 
 #include <cstdint>
 
-class NFMDemodulator : public SDR {
-    GDCLASS(NFMDemodulator, SDR)
+class AMDemodulator : public SDR {
+    GDCLASS(AMDemodulator, SDR)
 
 private:
     double offset_hz = 0.0;
-    double bandwidth_hz = 12500.0;
+    double bandwidth_hz = 10000.0;
     double output_volume = 1.0;
     bool lock_to_source_frequency = false;
     int64_t upstream_tuned_frequency_hz = 0;
@@ -36,7 +36,7 @@ private:
     bool debug_logging_enabled = false;
 
     bool dsp_config_dirty = true;
-    esdr_demod::FMDemodCore demod_core;
+    esdr_demod::AMDemodCore demod_core;
 
     void ensure_ui();
     void cache_ui_refs();
@@ -76,4 +76,4 @@ public:
     void set_port_value(int64_t p_port, const godot::Variant &p_value);
 };
 
-#endif // ESDR_NFM_DEMODULATOR_NODE_H
+#endif // ESDR_AM_DEMODULATOR_NODE_H

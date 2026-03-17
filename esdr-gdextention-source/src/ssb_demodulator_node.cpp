@@ -1,4 +1,4 @@
-#include "nfm_demodulator_node.h"
+#include "ssb_demodulator_node.h"
 
 #include <godot_cpp/classes/audio_server.hpp>
 #include <godot_cpp/classes/control.hpp>
@@ -7,61 +7,58 @@
 #include <godot_cpp/classes/label.hpp>
 #include <godot_cpp/classes/panel_container.hpp>
 #include <godot_cpp/classes/v_box_container.hpp>
-#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/memory.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
 
 #include <algorithm>
 #include <cmath>
 
 using namespace godot;
 
-namespace {
-void log_nfm(const String &p_message) {
-    UtilityFunctions::print(String("[ESDR][NFM] ") + p_message);
-}
-} // namespace
+void SSBDemodulator::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("_on_offset_changed", "value"), &SSBDemodulator::_on_offset_changed);
+    ClassDB::bind_method(D_METHOD("_on_bandwidth_changed", "value"), &SSBDemodulator::_on_bandwidth_changed);
+    ClassDB::bind_method(D_METHOD("_on_output_volume_changed", "value"), &SSBDemodulator::_on_output_volume_changed);
+    ClassDB::bind_method(D_METHOD("_on_tune_to_source_pressed"), &SSBDemodulator::_on_tune_to_source_pressed);
+    ClassDB::bind_method(D_METHOD("_on_lock_to_source_toggled", "enabled"), &SSBDemodulator::_on_lock_to_source_toggled);
 
-void NFMDemodulator::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("_on_offset_changed", "value"), &NFMDemodulator::_on_offset_changed);
-    ClassDB::bind_method(D_METHOD("_on_bandwidth_changed", "value"), &NFMDemodulator::_on_bandwidth_changed);
-    ClassDB::bind_method(D_METHOD("_on_output_volume_changed", "value"), &NFMDemodulator::_on_output_volume_changed);
-    ClassDB::bind_method(D_METHOD("_on_tune_to_source_pressed"), &NFMDemodulator::_on_tune_to_source_pressed);
-    ClassDB::bind_method(D_METHOD("_on_lock_to_source_toggled", "enabled"), &NFMDemodulator::_on_lock_to_source_toggled);
+    ClassDB::bind_method(D_METHOD("set_offset_hz", "value"), &SSBDemodulator::set_offset_hz);
+    ClassDB::bind_method(D_METHOD("get_offset_hz"), &SSBDemodulator::get_offset_hz);
 
-    ClassDB::bind_method(D_METHOD("set_offset_hz", "value"), &NFMDemodulator::set_offset_hz);
-    ClassDB::bind_method(D_METHOD("get_offset_hz"), &NFMDemodulator::get_offset_hz);
+    ClassDB::bind_method(D_METHOD("set_bandwidth_hz", "value"), &SSBDemodulator::set_bandwidth_hz);
+    ClassDB::bind_method(D_METHOD("get_bandwidth_hz"), &SSBDemodulator::get_bandwidth_hz);
+    ClassDB::bind_method(D_METHOD("set_output_volume", "value"), &SSBDemodulator::set_output_volume);
+    ClassDB::bind_method(D_METHOD("get_output_volume"), &SSBDemodulator::get_output_volume);
+    ClassDB::bind_method(D_METHOD("set_upstream_tuned_frequency_hz", "frequency_hz"), &SSBDemodulator::set_upstream_tuned_frequency_hz);
+    ClassDB::bind_method(D_METHOD("set_lock_to_source_frequency", "enabled"), &SSBDemodulator::set_lock_to_source_frequency);
+    ClassDB::bind_method(D_METHOD("get_lock_to_source_frequency"), &SSBDemodulator::get_lock_to_source_frequency);
 
-    ClassDB::bind_method(D_METHOD("set_bandwidth_hz", "value"), &NFMDemodulator::set_bandwidth_hz);
-    ClassDB::bind_method(D_METHOD("get_bandwidth_hz"), &NFMDemodulator::get_bandwidth_hz);
-    ClassDB::bind_method(D_METHOD("set_output_volume", "value"), &NFMDemodulator::set_output_volume);
-    ClassDB::bind_method(D_METHOD("get_output_volume"), &NFMDemodulator::get_output_volume);
-    ClassDB::bind_method(D_METHOD("set_lock_to_source_frequency", "enabled"), &NFMDemodulator::set_lock_to_source_frequency);
-    ClassDB::bind_method(D_METHOD("get_lock_to_source_frequency"), &NFMDemodulator::get_lock_to_source_frequency);
-    ClassDB::bind_method(D_METHOD("set_debug_logging_enabled", "enabled"), &NFMDemodulator::set_debug_logging_enabled);
-    ClassDB::bind_method(D_METHOD("get_debug_logging_enabled"), &NFMDemodulator::get_debug_logging_enabled);
+    ClassDB::bind_method(D_METHOD("set_input_sample_rate_hz", "value"), &SSBDemodulator::set_input_sample_rate_hz);
+    ClassDB::bind_method(D_METHOD("get_input_sample_rate_hz"), &SSBDemodulator::get_input_sample_rate_hz);
 
-    ClassDB::bind_method(D_METHOD("set_input_sample_rate_hz", "value"), &NFMDemodulator::set_input_sample_rate_hz);
-    ClassDB::bind_method(D_METHOD("get_input_sample_rate_hz"), &NFMDemodulator::get_input_sample_rate_hz);
-    ClassDB::bind_method(D_METHOD("set_upstream_tuned_frequency_hz", "frequency_hz"), &NFMDemodulator::set_upstream_tuned_frequency_hz);
+    ClassDB::bind_method(D_METHOD("set_demod_mode", "mode"), &SSBDemodulator::set_demod_mode);
+    ClassDB::bind_method(D_METHOD("get_demod_mode"), &SSBDemodulator::get_demod_mode);
 
-    ClassDB::bind_method(D_METHOD("get_port_value", "port"), &NFMDemodulator::get_port_value);
-    ClassDB::bind_method(D_METHOD("set_port_value", "port", "value"), &NFMDemodulator::set_port_value);
-    ClassDB::bind_method(D_METHOD("push_baseband_frame", "frame"), &NFMDemodulator::push_baseband_frame);
+    ClassDB::bind_method(D_METHOD("get_port_value", "port"), &SSBDemodulator::get_port_value);
+    ClassDB::bind_method(D_METHOD("set_port_value", "port", "value"), &SSBDemodulator::set_port_value);
+    ClassDB::bind_method(D_METHOD("push_baseband_frame", "frame"), &SSBDemodulator::push_baseband_frame);
 
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "offset_hz", PROPERTY_HINT_RANGE, "-999000000000,999000000000,1"), "set_offset_hz", "get_offset_hz");
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bandwidth_hz", PROPERTY_HINT_RANGE, "1000,50000,1"), "set_bandwidth_hz", "get_bandwidth_hz");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bandwidth_hz", PROPERTY_HINT_RANGE, "300,15000,1"), "set_bandwidth_hz", "get_bandwidth_hz");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "output_volume", PROPERTY_HINT_RANGE, "0,4,0.01"), "set_output_volume", "get_output_volume");
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "lock_to_source_frequency"), "set_lock_to_source_frequency", "get_lock_to_source_frequency");
-    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "debug_logging_enabled"), "set_debug_logging_enabled", "get_debug_logging_enabled");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "input_sample_rate_hz", PROPERTY_HINT_RANGE, "1000,120000000,1"), "set_input_sample_rate_hz", "get_input_sample_rate_hz");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "demod_mode", PROPERTY_HINT_ENUM, "USB,LSB,DSB"), "set_demod_mode", "get_demod_mode");
     ADD_SIGNAL(MethodInfo("audio_frame", PropertyInfo(Variant::PACKED_FLOAT32_ARRAY, "frame")));
     ADD_SIGNAL(MethodInfo("passthrough_frequency_request", PropertyInfo(Variant::INT, "frequency_hz")));
     ADD_SIGNAL(MethodInfo("offset_user_changed", PropertyInfo(Variant::INT, "offset_hz")));
+
+    BIND_ENUM_CONSTANT(DEMOD_USB);
+    BIND_ENUM_CONSTANT(DEMOD_LSB);
+    BIND_ENUM_CONSTANT(DEMOD_DSB);
 }
 
-void NFMDemodulator::_notification(int32_t p_what) {
+void SSBDemodulator::_notification(int32_t p_what) {
     if (p_what != NOTIFICATION_READY) {
         return;
     }
@@ -69,10 +66,11 @@ void NFMDemodulator::_notification(int32_t p_what) {
     ensure_ui();
     cache_ui_refs();
     bind_ui();
+    refresh_title();
     refresh_dsp_config();
 }
 
-void NFMDemodulator::set_offset_hz(double p_value) {
+void SSBDemodulator::set_offset_hz(double p_value) {
     offset_hz = std::clamp(p_value, -999000000000.0, 999000000000.0);
     if (offset_selector != nullptr) {
         offset_selector->set_value_no_signal(static_cast<int64_t>(std::llround(offset_hz)));
@@ -80,88 +78,90 @@ void NFMDemodulator::set_offset_hz(double p_value) {
     dsp_config_dirty = true;
 }
 
-double NFMDemodulator::get_offset_hz() const {
+double SSBDemodulator::get_offset_hz() const {
     return offset_hz;
 }
 
-void NFMDemodulator::set_bandwidth_hz(double p_value) {
-    bandwidth_hz = std::clamp(p_value, 1000.0, 50000.0);
+void SSBDemodulator::set_bandwidth_hz(double p_value) {
+    bandwidth_hz = std::clamp(p_value, 300.0, 15000.0);
     if (bandwidth_spin != nullptr) {
         bandwidth_spin->set_value_no_signal(bandwidth_hz);
     }
     dsp_config_dirty = true;
 }
 
-double NFMDemodulator::get_bandwidth_hz() const {
+double SSBDemodulator::get_bandwidth_hz() const {
     return bandwidth_hz;
 }
 
-void NFMDemodulator::set_output_volume(double p_value) {
+void SSBDemodulator::set_output_volume(double p_value) {
     output_volume = std::clamp(p_value, 0.0, 4.0);
     if (output_volume_spin != nullptr) {
         output_volume_spin->set_value_no_signal(output_volume);
     }
 }
 
-double NFMDemodulator::get_output_volume() const {
+double SSBDemodulator::get_output_volume() const {
     return output_volume;
 }
 
-void NFMDemodulator::set_lock_to_source_frequency(bool p_enabled) {
+void SSBDemodulator::set_lock_to_source_frequency(bool p_enabled) {
     lock_to_source_frequency = p_enabled;
     if (lock_to_source_button != nullptr) {
         lock_to_source_button->set_pressed_no_signal(lock_to_source_frequency);
     }
 }
 
-bool NFMDemodulator::get_lock_to_source_frequency() const {
+bool SSBDemodulator::get_lock_to_source_frequency() const {
     return lock_to_source_frequency;
 }
 
-void NFMDemodulator::set_debug_logging_enabled(bool p_enabled) {
-    debug_logging_enabled = p_enabled;
-}
-
-bool NFMDemodulator::get_debug_logging_enabled() const {
-    return debug_logging_enabled;
-}
-
-void NFMDemodulator::set_input_sample_rate_hz(double p_value) {
+void SSBDemodulator::set_input_sample_rate_hz(double p_value) {
     input_sample_rate_hz = std::clamp(p_value, 1000.0, 120000000.0);
     dsp_config_dirty = true;
 }
 
-void NFMDemodulator::set_upstream_tuned_frequency_hz(int64_t p_frequency_hz) {
-    upstream_tuned_frequency_hz = p_frequency_hz;
-}
-
-double NFMDemodulator::get_input_sample_rate_hz() const {
+double SSBDemodulator::get_input_sample_rate_hz() const {
     return input_sample_rate_hz;
 }
 
-void NFMDemodulator::_on_offset_changed(int64_t p_value) {
+void SSBDemodulator::set_upstream_tuned_frequency_hz(int64_t p_frequency_hz) {
+    upstream_tuned_frequency_hz = p_frequency_hz;
+}
+
+void SSBDemodulator::set_demod_mode(int32_t p_mode) {
+    demod_mode = std::clamp<int32_t>(p_mode, DEMOD_USB, DEMOD_DSB);
+    refresh_title();
+    dsp_config_dirty = true;
+}
+
+int32_t SSBDemodulator::get_demod_mode() const {
+    return demod_mode;
+}
+
+void SSBDemodulator::_on_offset_changed(int64_t p_value) {
     set_offset_hz(static_cast<double>(p_value));
     emit_signal("offset_user_changed", static_cast<int64_t>(std::llround(offset_hz)));
 }
 
-void NFMDemodulator::_on_bandwidth_changed(double p_value) {
+void SSBDemodulator::_on_bandwidth_changed(double p_value) {
     set_bandwidth_hz(p_value);
 }
 
-void NFMDemodulator::_on_output_volume_changed(double p_value) {
+void SSBDemodulator::_on_output_volume_changed(double p_value) {
     set_output_volume(p_value);
 }
 
-void NFMDemodulator::_on_tune_to_source_pressed() {
+void SSBDemodulator::_on_tune_to_source_pressed() {
     const int64_t target_hz = upstream_tuned_frequency_hz + static_cast<int64_t>(std::llround(offset_hz));
     emit_signal("passthrough_frequency_request", target_hz);
 }
 
-void NFMDemodulator::_on_lock_to_source_toggled(bool p_enabled) {
+void SSBDemodulator::_on_lock_to_source_toggled(bool p_enabled) {
     set_lock_to_source_frequency(p_enabled);
 }
 
-void NFMDemodulator::refresh_dsp_config() {
+void SSBDemodulator::refresh_dsp_config() {
     if (!dsp_config_dirty) {
         return;
     }
@@ -175,33 +175,24 @@ void NFMDemodulator::refresh_dsp_config() {
         }
     }
 
-    esdr_demod::FMParams params;
+    esdr_demod::SSBParams params;
     params.input_sample_rate_hz = input_sample_rate_hz;
     params.audio_sample_rate_hz = audio_mix_rate;
     params.offset_hz = offset_hz;
-    // Closer to SDR++ narrowband defaults: bandwidth and deviation are related but not identical.
-    params.deviation_hz = std::clamp(bandwidth_hz * 0.20, 2500.0, 7500.0);
-    params.rf_lowpass_hz = std::clamp(bandwidth_hz * 0.50, 3000.0, 22000.0);
-    params.audio_lowpass_hz = std::clamp(bandwidth_hz * 0.38, 2200.0, 8000.0);
-    params.deemphasis_enabled = true;
-    params.deemphasis_tau_seconds = 75e-6;
+    params.rf_lowpass_hz = std::clamp(bandwidth_hz * 0.60, 300.0, 12000.0);
+    params.audio_lowpass_hz = std::clamp(bandwidth_hz * 0.55, 300.0, 8000.0);
+    params.mode = static_cast<esdr_demod::SSBParams::Mode>(demod_mode);
     demod_core.configure(params);
 
     dsp_config_dirty = false;
 }
 
-void NFMDemodulator::push_baseband_frame(const PackedVector2Array &p_frame) {
+void SSBDemodulator::push_baseband_frame(const PackedVector2Array &p_frame) {
     if (Engine::get_singleton()->is_editor_hint()) {
         return;
     }
     if (p_frame.is_empty()) {
         return;
-    }
-
-    debug_in_samples += p_frame.size();
-    for (int32_t i = 0; i < p_frame.size(); i += 8) {
-        const Vector2 iq = p_frame[i];
-        debug_iq_peak = std::max(debug_iq_peak, static_cast<float>(std::max(std::abs(iq.x), std::abs(iq.y))));
     }
 
     refresh_dsp_config();
@@ -210,24 +201,13 @@ void NFMDemodulator::push_baseband_frame(const PackedVector2Array &p_frame) {
     demod_core.process_frame(p_frame, audio);
     if (!audio.is_empty()) {
         for (int32_t i = 0; i < audio.size(); i++) {
-            audio[i] = std::clamp(static_cast<float>(audio[i] * static_cast<float>(output_volume)), -1.0f, 1.0f);
-        }
-        debug_out_samples += audio.size();
-        for (int32_t i = 0; i < audio.size(); i++) {
-            const float sample = audio[i];
-            const float abs_value = std::abs(sample);
-            debug_out_peak = std::max(debug_out_peak, abs_value);
-            if (abs_value >= 0.995f) {
-                debug_out_clip_samples++;
-            }
+            audio[i] = std::clamp(audio[i] * static_cast<float>(output_volume), -1.0f, 1.0f);
         }
         emit_signal("audio_frame", audio);
     }
-
-    log_debug_stats_if_due();
 }
 
-Variant NFMDemodulator::get_port_value(int64_t p_port) const {
+Variant SSBDemodulator::get_port_value(int64_t p_port) const {
     switch (p_port) {
         case 0:
             return static_cast<int64_t>(std::llround(offset_hz));
@@ -240,7 +220,7 @@ Variant NFMDemodulator::get_port_value(int64_t p_port) const {
     }
 }
 
-void NFMDemodulator::set_port_value(int64_t p_port, const Variant &p_value) {
+void SSBDemodulator::set_port_value(int64_t p_port, const Variant &p_value) {
     switch (p_port) {
         case 0:
             set_offset_hz(static_cast<double>(p_value));
@@ -261,7 +241,7 @@ void NFMDemodulator::set_port_value(int64_t p_port, const Variant &p_value) {
     }
 }
 
-void NFMDemodulator::cache_ui_refs() {
+void SSBDemodulator::cache_ui_refs() {
     offset_selector = Object::cast_to<DigitNumberSelector>(get_node_or_null(NodePath("OffsetRow/OffsetOverlay/OffsetPanel/OffsetSelector")));
     tune_to_source_button = Object::cast_to<Button>(get_node_or_null(NodePath("OffsetRow/OffsetOverlay/TuneToSourceButton")));
     lock_to_source_button = Object::cast_to<Button>(get_node_or_null(NodePath("OffsetRow/OffsetOverlay/LockToSourceButton")));
@@ -269,7 +249,7 @@ void NFMDemodulator::cache_ui_refs() {
     output_volume_spin = Object::cast_to<SpinBox>(get_node_or_null(NodePath("OutputVolumeRow/OutputVolumePanel/OutputVolumeSpin")));
 }
 
-void NFMDemodulator::bind_ui() {
+void SSBDemodulator::bind_ui() {
     if (offset_selector != nullptr) {
         const Callable cb(this, "_on_offset_changed");
         if (!offset_selector->is_connected("value_changed", cb)) {
@@ -294,7 +274,7 @@ void NFMDemodulator::bind_ui() {
 
     if (tune_to_source_button != nullptr) {
         tune_to_source_button->set_anchors_and_offsets_preset(Control::PRESET_TOP_RIGHT);
-        tune_to_source_button->set_position(Vector2(-52, -4));
+        tune_to_source_button->set_position(Vector2(-52, 0));
         tune_to_source_button->set_size(Vector2(48, 20));
         const Callable cb(this, "_on_tune_to_source_pressed");
         if (!tune_to_source_button->is_connected("pressed", cb)) {
@@ -314,52 +294,22 @@ void NFMDemodulator::bind_ui() {
     }
 }
 
-void NFMDemodulator::log_debug_stats_if_due() {
-    if (!debug_logging_enabled) {
-        debug_last_log_us = 0;
-        debug_in_samples = 0;
-        debug_out_samples = 0;
-        debug_out_clip_samples = 0;
-        debug_iq_peak = 0.0f;
-        debug_out_peak = 0.0f;
-        return;
+void SSBDemodulator::refresh_title() {
+    switch (demod_mode) {
+        case DEMOD_LSB:
+            set_title("LSB Demodulator");
+            break;
+        case DEMOD_DSB:
+            set_title("DSB Demodulator");
+            break;
+        case DEMOD_USB:
+        default:
+            set_title("USB Demodulator");
+            break;
     }
-
-    Time *time = Time::get_singleton();
-    if (time == nullptr) {
-        return;
-    }
-    const uint64_t now_us = time->get_ticks_usec();
-    if (debug_last_log_us == 0) {
-        debug_last_log_us = now_us;
-        return;
-    }
-
-    const double dt_sec = static_cast<double>(now_us - debug_last_log_us) * 1e-6;
-    if (dt_sec < 1.0) {
-        return;
-    }
-    debug_last_log_us = now_us;
-
-    const double in_sps = static_cast<double>(debug_in_samples) / dt_sec;
-    const double out_sps = static_cast<double>(debug_out_samples) / dt_sec;
-    log_nfm(String("stats dt=") + String::num(dt_sec, 3) +
-            " in_sps=" + String::num(in_sps, 1) +
-            " out_sps=" + String::num(out_sps, 1) +
-            " iq_peak=" + String::num(debug_iq_peak, 4) +
-            " out_peak=" + String::num(debug_out_peak, 4) +
-            " out_clip=" + String::num_int64(debug_out_clip_samples) +
-            " sr=" + String::num(input_sample_rate_hz, 1) +
-            " bw=" + String::num(bandwidth_hz, 1));
-
-    debug_in_samples = 0;
-    debug_out_samples = 0;
-    debug_out_clip_samples = 0;
-    debug_iq_peak = 0.0f;
-    debug_out_peak = 0.0f;
 }
 
-void NFMDemodulator::configure_slots() {
+void SSBDemodulator::configure_slots() {
     clear_all_slots();
     set_slot(0, true, SIGNAL_INT, signal_color(SIGNAL_INT), true, SIGNAL_INT, signal_color(SIGNAL_INT));
     set_slot(1, true, SIGNAL_INT, signal_color(SIGNAL_INT), true, SIGNAL_INT, signal_color(SIGNAL_INT));
@@ -368,7 +318,7 @@ void NFMDemodulator::configure_slots() {
     set_slot(4, true, SIGNAL_FLOAT, signal_color(SIGNAL_FLOAT), true, SIGNAL_FLOAT, signal_color(SIGNAL_FLOAT));
 }
 
-void NFMDemodulator::ensure_ui() {
+void SSBDemodulator::ensure_ui() {
     if (has_node(NodePath("OffsetRow/OffsetOverlay/OffsetPanel/OffsetSelector")) &&
             has_node(NodePath("OffsetRow/OffsetOverlay/TuneToSourceButton")) &&
             has_node(NodePath("OffsetRow/OffsetOverlay/LockToSourceButton")) &&
@@ -384,9 +334,9 @@ void NFMDemodulator::ensure_ui() {
         memdelete(child);
     }
 
-    set_title("NFM Demodulator");
     set_custom_minimum_size(Vector2(400, 300));
     set_resizable(true);
+    refresh_title();
 
     VBoxContainer *offset_row = memnew(VBoxContainer);
     offset_row->set_name("OffsetRow");
@@ -425,9 +375,9 @@ void NFMDemodulator::ensure_ui() {
     tune_to_source->set_name("TuneToSourceButton");
     tune_to_source->set_text("Tune");
     tune_to_source->set_flat(true);
-    tune_to_source->set_tooltip_text("Tune source to this demodulator frequency");
+    tune_to_source->set_tooltip_text("Tune source to this demodulator center");
     tune_to_source->set_anchors_and_offsets_preset(Control::PRESET_TOP_RIGHT);
-    tune_to_source->set_position(Vector2(-52, -4));
+    tune_to_source->set_position(Vector2(-52, 0));
     tune_to_source->set_size(Vector2(48, 20));
     offset_overlay->add_child(tune_to_source);
 
@@ -459,9 +409,9 @@ void NFMDemodulator::ensure_ui() {
 
     SpinBox *bandwidth = memnew(SpinBox);
     bandwidth->set_name("BandwidthSpin");
-    bandwidth->set_min(1000.0);
-    bandwidth->set_max(50000.0);
-    bandwidth->set_step(100.0);
+    bandwidth->set_min(300.0);
+    bandwidth->set_max(15000.0);
+    bandwidth->set_step(50.0);
     bandwidth->set_value(bandwidth_hz);
     bandwidth->set_h_size_flags(Control::SIZE_EXPAND_FILL);
     bandwidth_panel->add_child(bandwidth);

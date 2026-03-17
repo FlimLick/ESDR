@@ -3,6 +3,7 @@
 
 #include <godot_cpp/classes/graph_node.hpp>
 #include <godot_cpp/variant/color.hpp>
+#include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
 class SDR : public godot::GraphNode {
@@ -21,6 +22,15 @@ public:
 
 protected:
     static void _bind_methods();
+
+private:
+    bool problem_state = false;
+    godot::String problem_message;
+
+public:
+    void set_problem_state(bool p_enabled, const godot::String &p_message = godot::String());
+    bool has_problem_state() const;
+    godot::String get_problem_message() const;
 };
 
 VARIANT_ENUM_CAST(SDR::SignalKind)

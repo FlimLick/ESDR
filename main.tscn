@@ -272,7 +272,7 @@ grid_pattern = 1
 zoom = 0.75
 zoom_min = 0.25
 zoom_max = 2.25
-zoom_step = 1.5
+zoom_step = 1.1
 show_zoom_label = true
 
 [node name="Button" type="Button" parent="VBoxContainer/Control" unique_id=1022847905]

@@ -1,42 +1,49 @@
-#ifndef ESDR_NFM_DEMODULATOR_NODE_H
-#define ESDR_NFM_DEMODULATOR_NODE_H
+#ifndef ESDR_WFM_DEMODULATOR_NODE_H
+#define ESDR_WFM_DEMODULATOR_NODE_H
 
 #include "demod_dsp_utils.h"
 #include "digit_number_selector.h"
 #include "sdr_node.h"
 
+#include <godot_cpp/classes/check_box.hpp>
 #include <godot_cpp/classes/button.hpp>
+#include <godot_cpp/classes/option_button.hpp>
 #include <godot_cpp/classes/spin_box.hpp>
 #include <godot_cpp/variant/variant.hpp>
 
 #include <cstdint>
 
-class NFMDemodulator : public SDR {
-    GDCLASS(NFMDemodulator, SDR)
+class WFMDemodulator : public SDR {
+    GDCLASS(WFMDemodulator, SDR)
 
 private:
     double offset_hz = 0.0;
-    double bandwidth_hz = 12500.0;
+    double bandwidth_hz = 150000.0;
     double output_volume = 1.0;
     bool lock_to_source_frequency = false;
     int64_t upstream_tuned_frequency_hz = 0;
     double input_sample_rate_hz = 2400000.0;
+    bool stereo_enabled = true;
+    int32_t deemphasis_mode = 2; // 0=Off, 1=50us, 2=75us
 
     DigitNumberSelector *offset_selector = nullptr;
     godot::SpinBox *bandwidth_spin = nullptr;
     godot::SpinBox *output_volume_spin = nullptr;
     godot::Button *tune_to_source_button = nullptr;
     godot::Button *lock_to_source_button = nullptr;
+    godot::CheckBox *stereo_checkbox = nullptr;
+    godot::OptionButton *deemphasis_selector = nullptr;
     uint64_t debug_last_log_us = 0;
     int64_t debug_in_samples = 0;
-    int64_t debug_out_samples = 0;
+    int64_t debug_out_mono_samples = 0;
+    int64_t debug_out_stereo_frames = 0;
     int64_t debug_out_clip_samples = 0;
     float debug_iq_peak = 0.0f;
     float debug_out_peak = 0.0f;
     bool debug_logging_enabled = false;
 
     bool dsp_config_dirty = true;
-    esdr_demod::FMDemodCore demod_core;
+    esdr_demod::WFMStereoDemodCore demod_core;
 
     void ensure_ui();
     void cache_ui_refs();
@@ -50,6 +57,8 @@ private:
     void _on_output_volume_changed(double p_value);
     void _on_tune_to_source_pressed();
     void _on_lock_to_source_toggled(bool p_enabled);
+    void _on_stereo_toggled(bool p_enabled);
+    void _on_deemphasis_selected(int64_t p_index);
 
 protected:
     static void _bind_methods();
@@ -60,6 +69,10 @@ public:
     void set_upstream_tuned_frequency_hz(int64_t p_frequency_hz);
     void set_input_sample_rate_hz(double p_value);
     double get_input_sample_rate_hz() const;
+    void set_stereo_enabled(bool p_enabled);
+    bool get_stereo_enabled() const;
+    void set_deemphasis_mode(int32_t p_mode);
+    int32_t get_deemphasis_mode() const;
     void set_offset_hz(double p_value);
     double get_offset_hz() const;
 
@@ -76,4 +89,4 @@ public:
     void set_port_value(int64_t p_port, const godot::Variant &p_value);
 };
 
-#endif // ESDR_NFM_DEMODULATOR_NODE_H
+#endif // ESDR_WFM_DEMODULATOR_NODE_H

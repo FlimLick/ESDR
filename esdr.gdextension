@@ -10,5 +10,35 @@ linux.debug.arm64 = "res://bin/libesdr.so"
 linux.release.arm64 = "res://bin/libesdr.so"
 macos.debug = "res://bin/libesdr.dylib"
 macos.release = "res://bin/libesdr.dylib"
-windows.debug.x86_64 = "res://bin/esdr.dll"
-windows.release.x86_64 = "res://bin/esdr.dll"
+windows.debug.x86_64 = "res://bin/esdr.windows.debug.dll"
+windows.release.x86_64 = "res://bin/esdr.windows.release.dll"
+
+[dependencies]
+windows.debug.x86_64 = {
+	"res://bin/libSoapySDR.dll": "",
+	"res://bin/librtlsdr.dll": "",
+	"res://bin/libusb-1.0.dll": "",
+	"res://bin/soapy-modules/librtlsdrSupport.dll": "",
+	"res://bin/libgcc_s_seh-1.dll": "",
+	"res://bin/libstdc++-6.dll": ""
+}
+windows.release.x86_64 = {
+	"res://bin/libSoapySDR.dll": "",
+	"res://bin/librtlsdr.dll": "",
+	"res://bin/libusb-1.0.dll": "",
+	"res://bin/soapy-modules/librtlsdrSupport.dll": "",
+	"res://bin/libgcc_s_seh-1.dll": "",
+	"res://bin/libstdc++-6.dll": ""
+}
+linux.debug.x86_64 = {
+	"res://bin/libSoapySDR.so.0.8-3": "",
+	"res://bin/librtlsdr.so.0": "",
+	"res://bin/libusb-1.0.so.0": "",
+	"res://bin/soapy-modules/librtlsdrSupport.so": ""
+}
+linux.release.x86_64 = {
+	"res://bin/libSoapySDR.so.0.8-3": "",
+	"res://bin/librtlsdr.so.0": "",
+	"res://bin/libusb-1.0.so.0": "",
+	"res://bin/soapy-modules/librtlsdrSupport.so": ""
+}

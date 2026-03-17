@@ -1,7 +1,10 @@
 # Native extension build outputs
 /build/
+/build-*/
 /bin/
 /radio-install/
+/radio-install*/
+/radio-libs/radio-install*/
 
 # CMake generated files
 /CMakeCache.txt

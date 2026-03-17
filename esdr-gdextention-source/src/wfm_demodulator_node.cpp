@@ -1,4 +1,4 @@
-#include "nfm_demodulator_node.h"
+#include "wfm_demodulator_node.h"
 
 #include <godot_cpp/classes/audio_server.hpp>
 #include <godot_cpp/classes/control.hpp>
@@ -18,50 +18,59 @@
 using namespace godot;
 
 namespace {
-void log_nfm(const String &p_message) {
-    UtilityFunctions::print(String("[ESDR][NFM] ") + p_message);
+void log_wfm(const String &p_message) {
+    UtilityFunctions::print(String("[ESDR][WFM] ") + p_message);
 }
 } // namespace
 
-void NFMDemodulator::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("_on_offset_changed", "value"), &NFMDemodulator::_on_offset_changed);
-    ClassDB::bind_method(D_METHOD("_on_bandwidth_changed", "value"), &NFMDemodulator::_on_bandwidth_changed);
-    ClassDB::bind_method(D_METHOD("_on_output_volume_changed", "value"), &NFMDemodulator::_on_output_volume_changed);
-    ClassDB::bind_method(D_METHOD("_on_tune_to_source_pressed"), &NFMDemodulator::_on_tune_to_source_pressed);
-    ClassDB::bind_method(D_METHOD("_on_lock_to_source_toggled", "enabled"), &NFMDemodulator::_on_lock_to_source_toggled);
+void WFMDemodulator::_bind_methods() {
+    ClassDB::bind_method(D_METHOD("_on_offset_changed", "value"), &WFMDemodulator::_on_offset_changed);
+    ClassDB::bind_method(D_METHOD("_on_bandwidth_changed", "value"), &WFMDemodulator::_on_bandwidth_changed);
+    ClassDB::bind_method(D_METHOD("_on_output_volume_changed", "value"), &WFMDemodulator::_on_output_volume_changed);
+    ClassDB::bind_method(D_METHOD("_on_tune_to_source_pressed"), &WFMDemodulator::_on_tune_to_source_pressed);
+    ClassDB::bind_method(D_METHOD("_on_lock_to_source_toggled", "enabled"), &WFMDemodulator::_on_lock_to_source_toggled);
+    ClassDB::bind_method(D_METHOD("_on_stereo_toggled", "enabled"), &WFMDemodulator::_on_stereo_toggled);
+    ClassDB::bind_method(D_METHOD("_on_deemphasis_selected", "index"), &WFMDemodulator::_on_deemphasis_selected);
 
-    ClassDB::bind_method(D_METHOD("set_offset_hz", "value"), &NFMDemodulator::set_offset_hz);
-    ClassDB::bind_method(D_METHOD("get_offset_hz"), &NFMDemodulator::get_offset_hz);
+    ClassDB::bind_method(D_METHOD("set_offset_hz", "value"), &WFMDemodulator::set_offset_hz);
+    ClassDB::bind_method(D_METHOD("get_offset_hz"), &WFMDemodulator::get_offset_hz);
 
-    ClassDB::bind_method(D_METHOD("set_bandwidth_hz", "value"), &NFMDemodulator::set_bandwidth_hz);
-    ClassDB::bind_method(D_METHOD("get_bandwidth_hz"), &NFMDemodulator::get_bandwidth_hz);
-    ClassDB::bind_method(D_METHOD("set_output_volume", "value"), &NFMDemodulator::set_output_volume);
-    ClassDB::bind_method(D_METHOD("get_output_volume"), &NFMDemodulator::get_output_volume);
-    ClassDB::bind_method(D_METHOD("set_lock_to_source_frequency", "enabled"), &NFMDemodulator::set_lock_to_source_frequency);
-    ClassDB::bind_method(D_METHOD("get_lock_to_source_frequency"), &NFMDemodulator::get_lock_to_source_frequency);
-    ClassDB::bind_method(D_METHOD("set_debug_logging_enabled", "enabled"), &NFMDemodulator::set_debug_logging_enabled);
-    ClassDB::bind_method(D_METHOD("get_debug_logging_enabled"), &NFMDemodulator::get_debug_logging_enabled);
+    ClassDB::bind_method(D_METHOD("set_bandwidth_hz", "value"), &WFMDemodulator::set_bandwidth_hz);
+    ClassDB::bind_method(D_METHOD("get_bandwidth_hz"), &WFMDemodulator::get_bandwidth_hz);
+    ClassDB::bind_method(D_METHOD("set_output_volume", "value"), &WFMDemodulator::set_output_volume);
+    ClassDB::bind_method(D_METHOD("get_output_volume"), &WFMDemodulator::get_output_volume);
+    ClassDB::bind_method(D_METHOD("set_lock_to_source_frequency", "enabled"), &WFMDemodulator::set_lock_to_source_frequency);
+    ClassDB::bind_method(D_METHOD("get_lock_to_source_frequency"), &WFMDemodulator::get_lock_to_source_frequency);
+    ClassDB::bind_method(D_METHOD("set_debug_logging_enabled", "enabled"), &WFMDemodulator::set_debug_logging_enabled);
+    ClassDB::bind_method(D_METHOD("get_debug_logging_enabled"), &WFMDemodulator::get_debug_logging_enabled);
 
-    ClassDB::bind_method(D_METHOD("set_input_sample_rate_hz", "value"), &NFMDemodulator::set_input_sample_rate_hz);
-    ClassDB::bind_method(D_METHOD("get_input_sample_rate_hz"), &NFMDemodulator::get_input_sample_rate_hz);
-    ClassDB::bind_method(D_METHOD("set_upstream_tuned_frequency_hz", "frequency_hz"), &NFMDemodulator::set_upstream_tuned_frequency_hz);
+    ClassDB::bind_method(D_METHOD("set_input_sample_rate_hz", "value"), &WFMDemodulator::set_input_sample_rate_hz);
+    ClassDB::bind_method(D_METHOD("get_input_sample_rate_hz"), &WFMDemodulator::get_input_sample_rate_hz);
+    ClassDB::bind_method(D_METHOD("set_upstream_tuned_frequency_hz", "frequency_hz"), &WFMDemodulator::set_upstream_tuned_frequency_hz);
+    ClassDB::bind_method(D_METHOD("set_stereo_enabled", "enabled"), &WFMDemodulator::set_stereo_enabled);
+    ClassDB::bind_method(D_METHOD("get_stereo_enabled"), &WFMDemodulator::get_stereo_enabled);
+    ClassDB::bind_method(D_METHOD("set_deemphasis_mode", "mode"), &WFMDemodulator::set_deemphasis_mode);
+    ClassDB::bind_method(D_METHOD("get_deemphasis_mode"), &WFMDemodulator::get_deemphasis_mode);
 
-    ClassDB::bind_method(D_METHOD("get_port_value", "port"), &NFMDemodulator::get_port_value);
-    ClassDB::bind_method(D_METHOD("set_port_value", "port", "value"), &NFMDemodulator::set_port_value);
-    ClassDB::bind_method(D_METHOD("push_baseband_frame", "frame"), &NFMDemodulator::push_baseband_frame);
+    ClassDB::bind_method(D_METHOD("get_port_value", "port"), &WFMDemodulator::get_port_value);
+    ClassDB::bind_method(D_METHOD("set_port_value", "port", "value"), &WFMDemodulator::set_port_value);
+    ClassDB::bind_method(D_METHOD("push_baseband_frame", "frame"), &WFMDemodulator::push_baseband_frame);
 
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "offset_hz", PROPERTY_HINT_RANGE, "-999000000000,999000000000,1"), "set_offset_hz", "get_offset_hz");
-    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bandwidth_hz", PROPERTY_HINT_RANGE, "1000,50000,1"), "set_bandwidth_hz", "get_bandwidth_hz");
+    ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "bandwidth_hz", PROPERTY_HINT_RANGE, "50000,300000,1"), "set_bandwidth_hz", "get_bandwidth_hz");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "output_volume", PROPERTY_HINT_RANGE, "0,4,0.01"), "set_output_volume", "get_output_volume");
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "lock_to_source_frequency"), "set_lock_to_source_frequency", "get_lock_to_source_frequency");
     ADD_PROPERTY(PropertyInfo(Variant::BOOL, "debug_logging_enabled"), "set_debug_logging_enabled", "get_debug_logging_enabled");
     ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "input_sample_rate_hz", PROPERTY_HINT_RANGE, "1000,120000000,1"), "set_input_sample_rate_hz", "get_input_sample_rate_hz");
+    ADD_PROPERTY(PropertyInfo(Variant::BOOL, "stereo_enabled"), "set_stereo_enabled", "get_stereo_enabled");
+    ADD_PROPERTY(PropertyInfo(Variant::INT, "deemphasis_mode", PROPERTY_HINT_ENUM, "Off,50us,75us"), "set_deemphasis_mode", "get_deemphasis_mode");
     ADD_SIGNAL(MethodInfo("audio_frame", PropertyInfo(Variant::PACKED_FLOAT32_ARRAY, "frame")));
+    ADD_SIGNAL(MethodInfo("audio_stereo_frame", PropertyInfo(Variant::PACKED_VECTOR2_ARRAY, "frame")));
     ADD_SIGNAL(MethodInfo("passthrough_frequency_request", PropertyInfo(Variant::INT, "frequency_hz")));
     ADD_SIGNAL(MethodInfo("offset_user_changed", PropertyInfo(Variant::INT, "offset_hz")));
 }
 
-void NFMDemodulator::_notification(int32_t p_what) {
+void WFMDemodulator::_notification(int32_t p_what) {
     if (p_what != NOTIFICATION_READY) {
         return;
     }
@@ -72,7 +81,7 @@ void NFMDemodulator::_notification(int32_t p_what) {
     refresh_dsp_config();
 }
 
-void NFMDemodulator::set_offset_hz(double p_value) {
+void WFMDemodulator::set_offset_hz(double p_value) {
     offset_hz = std::clamp(p_value, -999000000000.0, 999000000000.0);
     if (offset_selector != nullptr) {
         offset_selector->set_value_no_signal(static_cast<int64_t>(std::llround(offset_hz)));
@@ -80,88 +89,120 @@ void NFMDemodulator::set_offset_hz(double p_value) {
     dsp_config_dirty = true;
 }
 
-double NFMDemodulator::get_offset_hz() const {
+double WFMDemodulator::get_offset_hz() const {
     return offset_hz;
 }
 
-void NFMDemodulator::set_bandwidth_hz(double p_value) {
-    bandwidth_hz = std::clamp(p_value, 1000.0, 50000.0);
+void WFMDemodulator::set_bandwidth_hz(double p_value) {
+    bandwidth_hz = std::clamp(p_value, 50000.0, 300000.0);
     if (bandwidth_spin != nullptr) {
         bandwidth_spin->set_value_no_signal(bandwidth_hz);
     }
     dsp_config_dirty = true;
 }
 
-double NFMDemodulator::get_bandwidth_hz() const {
+double WFMDemodulator::get_bandwidth_hz() const {
     return bandwidth_hz;
 }
 
-void NFMDemodulator::set_output_volume(double p_value) {
+void WFMDemodulator::set_output_volume(double p_value) {
     output_volume = std::clamp(p_value, 0.0, 4.0);
     if (output_volume_spin != nullptr) {
         output_volume_spin->set_value_no_signal(output_volume);
     }
 }
 
-double NFMDemodulator::get_output_volume() const {
+double WFMDemodulator::get_output_volume() const {
     return output_volume;
 }
 
-void NFMDemodulator::set_lock_to_source_frequency(bool p_enabled) {
+void WFMDemodulator::set_lock_to_source_frequency(bool p_enabled) {
     lock_to_source_frequency = p_enabled;
     if (lock_to_source_button != nullptr) {
         lock_to_source_button->set_pressed_no_signal(lock_to_source_frequency);
     }
 }
 
-bool NFMDemodulator::get_lock_to_source_frequency() const {
+bool WFMDemodulator::get_lock_to_source_frequency() const {
     return lock_to_source_frequency;
 }
 
-void NFMDemodulator::set_debug_logging_enabled(bool p_enabled) {
+void WFMDemodulator::set_debug_logging_enabled(bool p_enabled) {
     debug_logging_enabled = p_enabled;
 }
 
-bool NFMDemodulator::get_debug_logging_enabled() const {
+bool WFMDemodulator::get_debug_logging_enabled() const {
     return debug_logging_enabled;
 }
 
-void NFMDemodulator::set_input_sample_rate_hz(double p_value) {
+void WFMDemodulator::set_input_sample_rate_hz(double p_value) {
     input_sample_rate_hz = std::clamp(p_value, 1000.0, 120000000.0);
     dsp_config_dirty = true;
 }
 
-void NFMDemodulator::set_upstream_tuned_frequency_hz(int64_t p_frequency_hz) {
+void WFMDemodulator::set_upstream_tuned_frequency_hz(int64_t p_frequency_hz) {
     upstream_tuned_frequency_hz = p_frequency_hz;
 }
 
-double NFMDemodulator::get_input_sample_rate_hz() const {
+double WFMDemodulator::get_input_sample_rate_hz() const {
     return input_sample_rate_hz;
 }
 
-void NFMDemodulator::_on_offset_changed(int64_t p_value) {
+void WFMDemodulator::set_stereo_enabled(bool p_enabled) {
+    stereo_enabled = p_enabled;
+    if (stereo_checkbox != nullptr) {
+        stereo_checkbox->set_pressed_no_signal(stereo_enabled);
+    }
+    dsp_config_dirty = true;
+}
+
+bool WFMDemodulator::get_stereo_enabled() const {
+    return stereo_enabled;
+}
+
+void WFMDemodulator::set_deemphasis_mode(int32_t p_mode) {
+    deemphasis_mode = std::clamp<int32_t>(p_mode, 0, 2);
+    if (deemphasis_selector != nullptr) {
+        deemphasis_selector->select(deemphasis_mode);
+    }
+    dsp_config_dirty = true;
+}
+
+int32_t WFMDemodulator::get_deemphasis_mode() const {
+    return deemphasis_mode;
+}
+
+void WFMDemodulator::_on_offset_changed(int64_t p_value) {
     set_offset_hz(static_cast<double>(p_value));
     emit_signal("offset_user_changed", static_cast<int64_t>(std::llround(offset_hz)));
 }
 
-void NFMDemodulator::_on_bandwidth_changed(double p_value) {
+void WFMDemodulator::_on_bandwidth_changed(double p_value) {
     set_bandwidth_hz(p_value);
 }
 
-void NFMDemodulator::_on_output_volume_changed(double p_value) {
+void WFMDemodulator::_on_output_volume_changed(double p_value) {
     set_output_volume(p_value);
 }
 
-void NFMDemodulator::_on_tune_to_source_pressed() {
+void WFMDemodulator::_on_tune_to_source_pressed() {
     const int64_t target_hz = upstream_tuned_frequency_hz + static_cast<int64_t>(std::llround(offset_hz));
     emit_signal("passthrough_frequency_request", target_hz);
 }
 
-void NFMDemodulator::_on_lock_to_source_toggled(bool p_enabled) {
+void WFMDemodulator::_on_lock_to_source_toggled(bool p_enabled) {
     set_lock_to_source_frequency(p_enabled);
 }
 
-void NFMDemodulator::refresh_dsp_config() {
+void WFMDemodulator::_on_stereo_toggled(bool p_enabled) {
+    set_stereo_enabled(p_enabled);
+}
+
+void WFMDemodulator::_on_deemphasis_selected(int64_t p_index) {
+    set_deemphasis_mode(static_cast<int32_t>(p_index));
+}
+
+void WFMDemodulator::refresh_dsp_config() {
     if (!dsp_config_dirty) {
         return;
     }
@@ -175,22 +216,24 @@ void NFMDemodulator::refresh_dsp_config() {
         }
     }
 
-    esdr_demod::FMParams params;
+    esdr_demod::WFMParams params;
     params.input_sample_rate_hz = input_sample_rate_hz;
     params.audio_sample_rate_hz = audio_mix_rate;
     params.offset_hz = offset_hz;
-    // Closer to SDR++ narrowband defaults: bandwidth and deviation are related but not identical.
-    params.deviation_hz = std::clamp(bandwidth_hz * 0.20, 2500.0, 7500.0);
-    params.rf_lowpass_hz = std::clamp(bandwidth_hz * 0.50, 3000.0, 22000.0);
-    params.audio_lowpass_hz = std::clamp(bandwidth_hz * 0.38, 2200.0, 8000.0);
-    params.deemphasis_enabled = true;
-    params.deemphasis_tau_seconds = 75e-6;
+    // Broadcast FM baseline is 75 kHz max deviation; keep channel bandwidth separate.
+    params.deviation_hz = 75000.0;
+    params.rf_lowpass_hz = std::clamp(bandwidth_hz * 0.50, 100000.0, 220000.0);
+    // Let bandwidth audibly control recovered audio width (mono + stereo branches).
+    params.audio_lowpass_hz = std::clamp(bandwidth_hz * 0.11, 2500.0, 16000.0);
+    params.deemphasis_enabled = deemphasis_mode != 0;
+    params.deemphasis_tau_seconds = deemphasis_mode == 1 ? 50e-6 : 75e-6;
+    params.stereo_enabled = stereo_enabled;
     demod_core.configure(params);
 
     dsp_config_dirty = false;
 }
 
-void NFMDemodulator::push_baseband_frame(const PackedVector2Array &p_frame) {
+void WFMDemodulator::push_baseband_frame(const PackedVector2Array &p_frame) {
     if (Engine::get_singleton()->is_editor_hint()) {
         return;
     }
@@ -206,28 +249,57 @@ void NFMDemodulator::push_baseband_frame(const PackedVector2Array &p_frame) {
 
     refresh_dsp_config();
 
-    PackedFloat32Array audio;
-    demod_core.process_frame(p_frame, audio);
-    if (!audio.is_empty()) {
-        for (int32_t i = 0; i < audio.size(); i++) {
-            audio[i] = std::clamp(static_cast<float>(audio[i] * static_cast<float>(output_volume)), -1.0f, 1.0f);
+    PackedFloat32Array audio_mono;
+    PackedVector2Array audio_stereo;
+    demod_core.process_frame(p_frame, audio_mono, audio_stereo);
+    if (!audio_stereo.is_empty()) {
+        for (int32_t i = 0; i < audio_stereo.size(); i++) {
+            const Vector2 sample = audio_stereo[i];
+            audio_stereo.set(i, Vector2(std::clamp(sample.x * static_cast<float>(output_volume), -1.0f, 1.0f),
+                                        std::clamp(sample.y * static_cast<float>(output_volume), -1.0f, 1.0f)));
         }
-        debug_out_samples += audio.size();
-        for (int32_t i = 0; i < audio.size(); i++) {
-            const float sample = audio[i];
-            const float abs_value = std::abs(sample);
-            debug_out_peak = std::max(debug_out_peak, abs_value);
-            if (abs_value >= 0.995f) {
+    }
+    if (!audio_mono.is_empty()) {
+        for (int32_t i = 0; i < audio_mono.size(); i++) {
+            audio_mono[i] = std::clamp(audio_mono[i] * static_cast<float>(output_volume), -1.0f, 1.0f);
+        }
+    }
+    if (audio_stereo.is_empty() && !audio_mono.is_empty()) {
+        // Keep downstream stereo-only links alive when stereo decode is disabled.
+        audio_stereo.resize(audio_mono.size());
+        for (int32_t i = 0; i < audio_mono.size(); i++) {
+            const float sample = audio_mono[i];
+            audio_stereo.set(i, Vector2(sample, sample));
+        }
+    }
+    if (!audio_stereo.is_empty()) {
+        debug_out_stereo_frames += audio_stereo.size();
+        for (int32_t i = 0; i < audio_stereo.size(); i++) {
+            const Vector2 pair = audio_stereo[i];
+            const float peak = static_cast<float>(std::max(std::abs(pair.x), std::abs(pair.y)));
+            debug_out_peak = std::max(debug_out_peak, peak);
+            if (peak >= 0.995f) {
                 debug_out_clip_samples++;
             }
         }
-        emit_signal("audio_frame", audio);
+        emit_signal("audio_stereo_frame", audio_stereo);
+    }
+    if (!audio_mono.is_empty()) {
+        debug_out_mono_samples += audio_mono.size();
+        for (int32_t i = 0; i < audio_mono.size(); i++) {
+            const float peak = std::abs(audio_mono[i]);
+            debug_out_peak = std::max(debug_out_peak, peak);
+            if (peak >= 0.995f) {
+                debug_out_clip_samples++;
+            }
+        }
+        emit_signal("audio_frame", audio_mono);
     }
 
     log_debug_stats_if_due();
 }
 
-Variant NFMDemodulator::get_port_value(int64_t p_port) const {
+Variant WFMDemodulator::get_port_value(int64_t p_port) const {
     switch (p_port) {
         case 0:
             return static_cast<int64_t>(std::llround(offset_hz));
@@ -240,7 +312,7 @@ Variant NFMDemodulator::get_port_value(int64_t p_port) const {
     }
 }
 
-void NFMDemodulator::set_port_value(int64_t p_port, const Variant &p_value) {
+void WFMDemodulator::set_port_value(int64_t p_port, const Variant &p_value) {
     switch (p_port) {
         case 0:
             set_offset_hz(static_cast<double>(p_value));
@@ -261,15 +333,17 @@ void NFMDemodulator::set_port_value(int64_t p_port, const Variant &p_value) {
     }
 }
 
-void NFMDemodulator::cache_ui_refs() {
+void WFMDemodulator::cache_ui_refs() {
     offset_selector = Object::cast_to<DigitNumberSelector>(get_node_or_null(NodePath("OffsetRow/OffsetOverlay/OffsetPanel/OffsetSelector")));
     tune_to_source_button = Object::cast_to<Button>(get_node_or_null(NodePath("OffsetRow/OffsetOverlay/TuneToSourceButton")));
     lock_to_source_button = Object::cast_to<Button>(get_node_or_null(NodePath("OffsetRow/OffsetOverlay/LockToSourceButton")));
     bandwidth_spin = Object::cast_to<SpinBox>(get_node_or_null(NodePath("BandwidthRow/BandwidthPanel/BandwidthSpin")));
     output_volume_spin = Object::cast_to<SpinBox>(get_node_or_null(NodePath("OutputVolumeRow/OutputVolumePanel/OutputVolumeSpin")));
+    stereo_checkbox = Object::cast_to<CheckBox>(get_node_or_null(NodePath("StereoRow/StereoCheckBox")));
+    deemphasis_selector = Object::cast_to<OptionButton>(get_node_or_null(NodePath("DeemphasisRow/DeemphasisSelector")));
 }
 
-void NFMDemodulator::bind_ui() {
+void WFMDemodulator::bind_ui() {
     if (offset_selector != nullptr) {
         const Callable cb(this, "_on_offset_changed");
         if (!offset_selector->is_connected("value_changed", cb)) {
@@ -312,13 +386,30 @@ void NFMDemodulator::bind_ui() {
             lock_to_source_button->connect("toggled", cb);
         }
     }
+
+    if (stereo_checkbox != nullptr) {
+        stereo_checkbox->set_pressed_no_signal(stereo_enabled);
+        const Callable cb(this, "_on_stereo_toggled");
+        if (!stereo_checkbox->is_connected("toggled", cb)) {
+            stereo_checkbox->connect("toggled", cb);
+        }
+    }
+
+    if (deemphasis_selector != nullptr) {
+        deemphasis_selector->select(deemphasis_mode);
+        const Callable cb(this, "_on_deemphasis_selected");
+        if (!deemphasis_selector->is_connected("item_selected", cb)) {
+            deemphasis_selector->connect("item_selected", cb);
+        }
+    }
 }
 
-void NFMDemodulator::log_debug_stats_if_due() {
+void WFMDemodulator::log_debug_stats_if_due() {
     if (!debug_logging_enabled) {
         debug_last_log_us = 0;
         debug_in_samples = 0;
-        debug_out_samples = 0;
+        debug_out_mono_samples = 0;
+        debug_out_stereo_frames = 0;
         debug_out_clip_samples = 0;
         debug_iq_peak = 0.0f;
         debug_out_peak = 0.0f;
@@ -342,24 +433,29 @@ void NFMDemodulator::log_debug_stats_if_due() {
     debug_last_log_us = now_us;
 
     const double in_sps = static_cast<double>(debug_in_samples) / dt_sec;
-    const double out_sps = static_cast<double>(debug_out_samples) / dt_sec;
-    log_nfm(String("stats dt=") + String::num(dt_sec, 3) +
+    const double mono_out_sps = static_cast<double>(debug_out_mono_samples) / dt_sec;
+    const double stereo_frame_sps = static_cast<double>(debug_out_stereo_frames) / dt_sec;
+    log_wfm(String("stats dt=") + String::num(dt_sec, 3) +
             " in_sps=" + String::num(in_sps, 1) +
-            " out_sps=" + String::num(out_sps, 1) +
+            " out_mono_sps=" + String::num(mono_out_sps, 1) +
+            " out_stereo_fps=" + String::num(stereo_frame_sps, 1) +
             " iq_peak=" + String::num(debug_iq_peak, 4) +
             " out_peak=" + String::num(debug_out_peak, 4) +
             " out_clip=" + String::num_int64(debug_out_clip_samples) +
             " sr=" + String::num(input_sample_rate_hz, 1) +
-            " bw=" + String::num(bandwidth_hz, 1));
+            " bw=" + String::num(bandwidth_hz, 1) +
+            " deemp=" + String::num_int64(deemphasis_mode) +
+            " stereo=" + (stereo_enabled ? String("true") : String("false")));
 
     debug_in_samples = 0;
-    debug_out_samples = 0;
+    debug_out_mono_samples = 0;
+    debug_out_stereo_frames = 0;
     debug_out_clip_samples = 0;
     debug_iq_peak = 0.0f;
     debug_out_peak = 0.0f;
 }
 
-void NFMDemodulator::configure_slots() {
+void WFMDemodulator::configure_slots() {
     clear_all_slots();
     set_slot(0, true, SIGNAL_INT, signal_color(SIGNAL_INT), true, SIGNAL_INT, signal_color(SIGNAL_INT));
     set_slot(1, true, SIGNAL_INT, signal_color(SIGNAL_INT), true, SIGNAL_INT, signal_color(SIGNAL_INT));
@@ -368,12 +464,14 @@ void NFMDemodulator::configure_slots() {
     set_slot(4, true, SIGNAL_FLOAT, signal_color(SIGNAL_FLOAT), true, SIGNAL_FLOAT, signal_color(SIGNAL_FLOAT));
 }
 
-void NFMDemodulator::ensure_ui() {
+void WFMDemodulator::ensure_ui() {
     if (has_node(NodePath("OffsetRow/OffsetOverlay/OffsetPanel/OffsetSelector")) &&
             has_node(NodePath("OffsetRow/OffsetOverlay/TuneToSourceButton")) &&
             has_node(NodePath("OffsetRow/OffsetOverlay/LockToSourceButton")) &&
             has_node(NodePath("BandwidthRow/BandwidthPanel/BandwidthSpin")) &&
-            has_node(NodePath("OutputVolumeRow/OutputVolumePanel/OutputVolumeSpin"))) {
+            has_node(NodePath("OutputVolumeRow/OutputVolumePanel/OutputVolumeSpin")) &&
+            has_node(NodePath("StereoRow/StereoCheckBox")) &&
+            has_node(NodePath("DeemphasisRow/DeemphasisSelector"))) {
         configure_slots();
         return;
     }
@@ -384,7 +482,7 @@ void NFMDemodulator::ensure_ui() {
         memdelete(child);
     }
 
-    set_title("NFM Demodulator");
+    set_title("WFM Demodulator");
     set_custom_minimum_size(Vector2(400, 300));
     set_resizable(true);
 
@@ -459,9 +557,9 @@ void NFMDemodulator::ensure_ui() {
 
     SpinBox *bandwidth = memnew(SpinBox);
     bandwidth->set_name("BandwidthSpin");
-    bandwidth->set_min(1000.0);
-    bandwidth->set_max(50000.0);
-    bandwidth->set_step(100.0);
+    bandwidth->set_min(50000.0);
+    bandwidth->set_max(300000.0);
+    bandwidth->set_step(1000.0);
     bandwidth->set_value(bandwidth_hz);
     bandwidth->set_h_size_flags(Control::SIZE_EXPAND_FILL);
     bandwidth_panel->add_child(bandwidth);
@@ -488,6 +586,34 @@ void NFMDemodulator::ensure_ui() {
     output_spin->set_value(output_volume);
     output_spin->set_h_size_flags(Control::SIZE_EXPAND_FILL);
     output_panel->add_child(output_spin);
+
+    HBoxContainer *stereo_row = memnew(HBoxContainer);
+    stereo_row->set_name("StereoRow");
+    add_child(stereo_row);
+
+    CheckBox *stereo = memnew(CheckBox);
+    stereo->set_name("StereoCheckBox");
+    stereo->set_text("Stereo");
+    stereo->set_pressed(stereo_enabled);
+    stereo_row->add_child(stereo);
+
+    HBoxContainer *deemphasis_row = memnew(HBoxContainer);
+    deemphasis_row->set_name("DeemphasisRow");
+    add_child(deemphasis_row);
+
+    Label *deemphasis_label = memnew(Label);
+    deemphasis_label->set_name("DeemphasisLabel");
+    deemphasis_label->set_text("De-emphasis");
+    deemphasis_row->add_child(deemphasis_label);
+
+    OptionButton *deemphasis = memnew(OptionButton);
+    deemphasis->set_name("DeemphasisSelector");
+    deemphasis->set_h_size_flags(Control::SIZE_EXPAND_FILL);
+    deemphasis->add_item("Off", 0);
+    deemphasis->add_item("50us", 1);
+    deemphasis->add_item("75us", 2);
+    deemphasis->select(deemphasis_mode);
+    deemphasis_row->add_child(deemphasis);
 
     Label *baseband = memnew(Label);
     baseband->set_name("LabelBaseband");

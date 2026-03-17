@@ -21,3 +21,12 @@ mono_crash.*.json
 
 # Native extension output at project root
 /bin/
+
+# Extension build/install artifacts
+/esdr-gdextention-source/build-*/
+/esdr-gdextention-source/radio-install*/
+/esdr-gdextention-source/radio-libs/radio-install*/
+
+# Godot generated script metadata
+/scripts/*.uid
+/export_presets.cfg

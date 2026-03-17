@@ -24,8 +24,8 @@ class RTLSDRBackend : public godot::RefCounted {
     GDCLASS(RTLSDRBackend, godot::RefCounted)
 
 private:
-    std::mutex state_mutex;
-    std::mutex frame_mutex;
+    mutable std::mutex state_mutex;
+    mutable std::mutex frame_mutex;
     mutable std::mutex status_mutex;
 
     std::thread worker_thread;
@@ -33,7 +33,7 @@ private:
     std::atomic<bool> stop_requested{false};
 
     std::deque<std::complex<float>> sample_queue;
-    std::size_t max_queued_samples = 262144;
+    std::size_t max_queued_samples = 1048576;
 
     godot::String last_status_message;
     godot::String pending_error;
@@ -43,8 +43,16 @@ private:
     int32_t channel = 0;
 
     double frequency_hz = 433000000.0;
+    double effective_frequency_hz = 433000000.0;
+    bool frequency_update_pending = false;
     double sample_rate = 2400000.0;
+    double effective_sample_rate = 2400000.0;
     float gain_db = 25.0f;
+
+    double min_frequency_hz = 0.0;
+    double max_frequency_hz = 999000000000.0;
+    double min_sample_rate = 1000.0;
+    double max_sample_rate = 999000000000.0;
 
     bool bias_t_enabled = false;
     bool rtl_agc_enabled = false;
@@ -63,6 +71,8 @@ private:
 #ifdef ESDR_HAS_SOAPY
     void cleanup_device_locked();
     void apply_runtime_config_locked();
+    void update_capabilities_from_device_locked();
+    void refresh_capabilities_locked();
 #endif
 
 protected:
@@ -77,6 +87,8 @@ public:
     bool is_running() const;
 
     godot::PackedVector2Array pull_baseband_frame(int32_t p_max_samples = 16384);
+    int32_t get_queued_sample_count() const;
+    double get_effective_sample_rate() const;
     godot::String consume_error();
     godot::String get_last_status_message() const;
     godot::PackedStringArray enumerate_devices() const;
@@ -92,9 +104,14 @@ public:
 
     void set_frequency_hz(double p_frequency_hz);
     double get_frequency_hz() const;
+    double get_effective_frequency_hz() const;
+    double get_min_frequency_hz() const;
+    double get_max_frequency_hz() const;
 
     void set_sample_rate(double p_sample_rate);
     double get_sample_rate() const;
+    double get_min_sample_rate() const;
+    double get_max_sample_rate() const;
 
     void set_gain_db(float p_gain_db);
     float get_gain_db() const;

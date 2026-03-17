@@ -7,19 +7,24 @@
 	path = esdr-gdextention-source/radio-libs/SoapySDR
 	url = https://github.com/pothosware/SoapySDR.git
 	fetchRecurseSubmodules = true
+	ignore = untracked
 [submodule "esdr-gdextention-source/radio-libs/SoapyRTLSDR"]
 	path = esdr-gdextention-source/radio-libs/SoapyRTLSDR
 	url = https://github.com/pothosware/SoapyRTLSDR.git
 	fetchRecurseSubmodules = true
+	ignore = untracked
 [submodule "esdr-gdextention-source/radio-libs/rtl-sdr"]
 	path = esdr-gdextention-source/radio-libs/rtl-sdr
 	url = https://github.com/osmocom/rtl-sdr.git
 	fetchRecurseSubmodules = true
+	ignore = untracked
 [submodule "esdr-gdextention-source/radio-libs/liquid-dsp"]
 	path = esdr-gdextention-source/radio-libs/liquid-dsp
 	url = https://github.com/jgaeddert/liquid-dsp.git
 	fetchRecurseSubmodules = true
+	ignore = untracked
 [submodule "esdr-gdextention-source/radio-libs/volk"]
 	path = esdr-gdextention-source/radio-libs/volk
 	url = https://github.com/gnuradio/volk.git
 	fetchRecurseSubmodules = true
+	ignore = untracked
